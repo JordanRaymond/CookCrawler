@@ -9,17 +9,16 @@ class RicardoParse {
         this.recipe = {}
     }
 
-    loadHtml(url) {
-        return requestP(url)
-        .then(html => {
-            this.websiteUrl = url            
-            this.$ = cheerio.load(html)
-
-            return this
-        })
-        .catch(err => {
-            console.log(err)
-        });
+    async loadHtml(url) {
+        try {
+            const html = await requestP(url);
+            this.websiteUrl = url;
+            this.$ = cheerio.load(html);
+            return this;
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     title() {
