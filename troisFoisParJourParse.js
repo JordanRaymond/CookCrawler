@@ -1,13 +1,14 @@
 const RecipeParser = require('./RecipeParser/recipeParser.js')
 const timeParse = require('parse-duration')
 
-class RicardoParse extends RecipeParser {
+
+class TroisFoisParJourParse extends RecipeParser {
     constructor() {
         super()
     }
 
     title() {
-        return {title: this.$('.recipe-content > h1').text()}
+        return {title: this.whiteSpaceRemover(this.$('.article-recipe__content--top > h1').text())}
     }
 
     recipeInfo() {
@@ -46,4 +47,4 @@ class RicardoParse extends RecipeParser {
     }
 }
 
-module.exports = RicardoParse
+module.exports = TroisFoisParJourParse
