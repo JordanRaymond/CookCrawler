@@ -6,16 +6,9 @@ class RicardoParse extends RecipeParser {
         super()
     }
 
-    title() {
-        return {title: this.$('.recipe-content > h1').text()}
-    }
+    getRecipeInfo(selector) {
+        const recipeInfo = this.getTxtArrayFromElements(selector)
 
-    recipeInfo() {
-        const recipeInfo = []
-        this.$('.recipe-content > dl > dd').each((i, element) => {
-            recipeInfo.push(this.whiteSpaceRemover(this.$(element).text()))
-        })
-    
         return {
              preparationTime: timeParse(recipeInfo[0]),
              cookTime: timeParse(recipeInfo[1]),
@@ -23,26 +16,53 @@ class RicardoParse extends RecipeParser {
         }
     }
 
-    ingredients() {
-        const ingredients = []
-        this.$('#formIngredients ul > li > label > span').each((i, element) => {
-            ingredients.push(this.whiteSpaceRemover(this.$(element).text()))    
-        })
-    
-        return {ingredients: ingredients}
+    getIngredients() {
+        if(this.$('#formIngredients > h3').length) {
+            let obj = {}
+            this.$('#formIngredients > h3').each((i, element) => {
+                    obj[this.$(element).text()] = (() => {
+                        const ingredients = []
+                        this.$(this.$('#formIngredients > ul ')[i]).find('li').each((j, ulElement) => {
+                            ingredients.push(this.whiteSpaceRemover(this.$(ulElement).text()))
+                        })
+
+                        return ingredients
+                })()
+            })
+
+            return obj
+        } 
+        else return this.getTxtArrayFromElements('#formIngredients ul > li > label > span')
     }
 
-    preparationSteps() {
-        const preparation = []
-        this.$('#preparation ol > li > span').each((i, element) => {
-            preparation.push(this.whiteSpaceRemover(this.$(element).text()))    
-        })
+    getSteps(selector) {
+        if(this.$('#preparation > h3').length) {
+            let obj = {}
+            this.$('#preparation > h3').each((i, element) => {
+                    obj[this.$(element).text()] = (() => {
+                        const ingredients = []
+                        this.$(this.$('#preparation > ol ')[i]).find('li').each((j, ulElement) => {
+                            ingredients.push(this.whiteSpaceRemover(this.$(ulElement).text()))
+                        })
 
-        return {preparationSteps: preparation}
+                        return ingredients
+                })()
+            })
+
+            return obj
+        }
+        else return this.getTxtArrayFromElements(selector)
     }
 
-    recipeImgUrl() {
-        return {imgUrl: this.$('.recipe-picture > a').attr('href')}   
+    parse() {
+        return {
+            recipeUrl: this.recipeUrl,
+            title: this.getTitle('.recipe-content > h1'),
+            recipeInfo: this.getRecipeInfo('.recipe-content > dl > dd'),
+            ingredients: this.getIngredients(),
+            steps: this.getSteps('#preparation ol > li > span'),
+            recipeImgUrl: this.getRecipeImgUrl('.recipe-picture > a')
+        }
     }
 }
 
