@@ -1,7 +1,7 @@
-const RecipeParser = require('./RecipeParser/recipeParser.js')
+const RecipeParser = require('../recipeParser.js')
 const timeParse = require('parse-duration')
 
-class TroisFoisParJourParse extends RecipeParser {
+class TroisFoisParJourParser extends RecipeParser {
     constructor() {
         super()
     }
@@ -52,4 +52,4 @@ class TroisFoisParJourParse extends RecipeParser {
     }
 }
 
-module.exports = TroisFoisParJourParse
+module.exports = TroisFoisParJourParser

@@ -6,10 +6,6 @@ const cheerio = require('cheerio')
 const whiteSpaceRemReg = /[^\S\r]{2,}/g
 
 class RecipeParser {
-    constructor() {
-      
-    }
-
     async loadHtml(url) {
         this.recipeUrl = url;
 
@@ -21,6 +17,16 @@ class RecipeParser {
             return this;
         }
         catch (err) {
+            console.log(err);
+        }
+    }
+    
+    async parseHtml(url) {
+        try {
+            await this.loadHtml(url)
+            return this.parse()
+        }
+        catch(err) {
             console.log(err);
         }
     }

@@ -1,18 +1,17 @@
-const cookCrawler = require('./cookCrawler.js')
+const cookCrawler = require('./RecipeParser/cookCrawler.js')
+
 const ricardoUrlWith2RecipeUrl = 'https://www.ricardocuisine.com/recettes/8210-b-uf-braise-avec-salade-d-herbes'
 const ricardoNormalRecipeUrl = 'https://www.ricardocuisine.com/recettes/3011-filets-de-porc-glaces-a-l-erable'
 const troisFoisUrl = 'https://www.troisfoisparjour.com/fr/recettes/plats-principaux/poulet-volaille/poulet-a-la-moutarde-herbes-fraiches-riz-a-la-ciboulette/'
 
-const ricardoParse = require('./ricardoParse.js')
-const troisFoisParse = require('./troisFoisParJourParse.js')
+cookCrawler.getRecipeData(ricardoUrlWith2RecipeUrl).then(data => {
+    console.log(data)
+})
 
-const info = new ricardoParse()
-    .loadHtml(ricardoUrlWith2RecipeUrl)
-    .then(parse => {
-        console.log(parse.parse())
-    })
+cookCrawler.getRecipeData(ricardoNormalRecipeUrl).then(data => {
+    console.log(data)
+})
 
-const trois = new troisFoisParse().loadHtml(troisFoisUrl)
-    .then(parse => {
-        console.log(parse.parse())
-    })
+cookCrawler.getRecipeData(troisFoisUrl).then(data => {
+    console.log(data)
+})

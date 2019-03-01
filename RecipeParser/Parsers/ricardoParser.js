@@ -1,7 +1,7 @@
-const RecipeParser = require('./RecipeParser/recipeParser.js')
+const RecipeParser = require('../recipeParser.js')
 const timeParse = require('parse-duration')
 
-class RicardoParse extends RecipeParser {
+class RicardoParser extends RecipeParser {
     constructor() {
         super()
     }
@@ -10,16 +10,18 @@ class RicardoParse extends RecipeParser {
         const recipeInfo = this.getTxtArrayFromElements(selector)
 
         return {
-             preparationTime: timeParse(recipeInfo[0]),
-             cookTime: timeParse(recipeInfo[1]),
+             preparationTimeInMs: timeParse(recipeInfo[0]),
+             cookTimeInMs: timeParse(recipeInfo[1]),
              portions: parseInt(recipeInfo[2])
         }
     }
 
     getIngredients() {
+        // If the div #formIngredients have h3 in it, that mean the recipe have more than one recipe in it
         if(this.$('#formIngredients > h3').length) {
             let obj = {}
             this.$('#formIngredients > h3').each((i, element) => {
+                    // For each title, assign the coresponding list of ingredients 
                     obj[this.$(element).text()] = (() => {
                         const ingredients = []
                         this.$(this.$('#formIngredients > ul ')[i]).find('li').each((j, ulElement) => {
@@ -35,10 +37,13 @@ class RicardoParse extends RecipeParser {
         else return this.getTxtArrayFromElements('#formIngredients ul > li > label > span')
     }
 
-    getSteps(selector) {
+
+    getSteps() {
+        // If the div #preparation have h3 in it, that mean the recipe have more than one recipe in it
         if(this.$('#preparation > h3').length) {
             let obj = {}
             this.$('#preparation > h3').each((i, element) => {
+                    // For each title, assign the coresponding list of ingredients 
                     obj[this.$(element).text()] = (() => {
                         const ingredients = []
                         this.$(this.$('#preparation > ol ')[i]).find('li').each((j, ulElement) => {
@@ -51,7 +56,7 @@ class RicardoParse extends RecipeParser {
 
             return obj
         }
-        else return this.getTxtArrayFromElements(selector)
+        else return this.getTxtArrayFromElements('#preparation > ol > li > span')
     }
 
     parse() {
@@ -60,10 +65,10 @@ class RicardoParse extends RecipeParser {
             title: this.getTitle('.recipe-content > h1'),
             recipeInfo: this.getRecipeInfo('.recipe-content > dl > dd'),
             ingredients: this.getIngredients(),
-            steps: this.getSteps('#preparation ol > li > span'),
+            steps: this.getSteps(),
             recipeImgUrl: this.getRecipeImgUrl('.recipe-picture > a')
         }
     }
 }
 
-module.exports = RicardoParse
+module.exports = RicardoParser
