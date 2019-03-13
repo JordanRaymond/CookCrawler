@@ -7,21 +7,20 @@ const domainMatchReg = /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/g
 
 
 class CookCrawler  {
+    static getParsers() {
+       return {
+        'https://www.ricardocuisine.com': RicardoParser,
+        'https://www.troisfoisparjour.com': TroisfoisparjourParser,
+        }
+    }
+
     static getRecipeData(url) {
         const domain = url.match(domainMatchReg).toString()
-        switch(domain) {
-            case 'https://www.ricardocuisine.com':
-                const ricardoParser = new RicardoParser()
-
-                return ricardoParser.parseHtml(url)
-            case 'https://www.troisfoisparjour.com':
-                const troisfoisparjourParse = new TroisfoisparjourParser()
-                
-                return troisfoisparjourParse.parseHtml(url)
-            default: 
-                console.warn('No parser exist for ths domain or wrong url.')
-                break
+        if(CookCrawler.getParsers().hasOwnProperty(domain)) {
+            const parser = CookCrawler.getParsers()[domain]
+            return new parser().parseHtml(url)
         }
+        console.warn('No parser exist for ths domain or wrong url.')
     }
 }
 

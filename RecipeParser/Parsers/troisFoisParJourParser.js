@@ -2,13 +2,10 @@ const RecipeParser = require('../recipeParser.js')
 const timeParse = require('parse-duration')
 
 class TroisFoisParJourParser extends RecipeParser {
-    constructor() {
-        super()
-    }
 
     getRecipeInfo(selector) {
         const recipeInfo = this.getTxtArrayFromElements(selector)
-        console.log(recipeInfo)
+        
         return {
              preparationTime: timeParse(recipeInfo[3]),
              cookTime: timeParse(recipeInfo[5]),
@@ -31,8 +28,6 @@ class TroisFoisParJourParser extends RecipeParser {
             preparation.push(this.whiteSpaceRemover(this.$(element).text()))    
         })
 
-        console.log(preparation)
-
         return preparation
     }
 
@@ -42,6 +37,7 @@ class TroisFoisParJourParser extends RecipeParser {
 
     parse() {
         return {
+            websiteName: this.getWebsiteName(),
             recipeUrl: this.recipeUrl,
             title: this.getTitle('.article-recipe__content--top > h1'),
             recipeInfo: this.getRecipeInfo('.general > ul > li > span'),

@@ -3,21 +3,21 @@
 const requestP = require('request-promise-native')
 const cheerio = require('cheerio')
 
-const whiteSpaceRemReg = /[^\S\r]{2,}/g
+const whiteSpaceRemReg = /[^\S\r]{2,}|(\\n)|\\|^\s/gi
 
 class RecipeParser {
     async loadHtml(url) {
-        this.recipeUrl = url;
+        this.recipeUrl = url
 
         try {
             const recipeHtml = await requestP(url);
             // Load the virtual DOM 
-            this.$ = cheerio.load(recipeHtml);
+            this.$ = cheerio.load(recipeHtml, {normalizeWhitespace: true})
 
-            return this;
+            return this
         }
         catch (err) {
-            console.log(err);
+            console.log(err)
         }
     }
     
@@ -27,7 +27,7 @@ class RecipeParser {
             return this.parse()
         }
         catch(err) {
-            console.log(err);
+            console.log(err)
         }
     }
 
@@ -35,17 +35,20 @@ class RecipeParser {
         return this.whiteSpaceRemover(this.$(selector).text())
     }
 
+    getWebsiteName(selector) {
+        return this.$("meta[property='og:site_name']").attr("content")
+    }
+
     getRecipeInfo(selector) {        
-        throw new Error('You have to implement the method getRecipeInfo!');
+        throw new Error('You have to implement the method getRecipeInfo!')
     }
 
     getIngredients(selector) {
-        
-        throw new Error('You have to implement the method getIngredients!');
+        throw new Error('You have to implement the method getIngredients!')
     }
 
     getSteps(selector) {
-        throw new Error('You have to implement the method getSteps!');
+        throw new Error('You have to implement the method getSteps!')
     }
 
     getRecipeImgUrl(selector) {
@@ -57,6 +60,7 @@ class RecipeParser {
      */
     parse() {
         return {
+            websiteName: getWebsiteName(),
             recipeUrl: this.recipeUrl,
             title: this.getTitle(),
             recipeInfo: this.getRecipeInfo(),

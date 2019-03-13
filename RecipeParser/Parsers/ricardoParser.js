@@ -2,9 +2,6 @@ const RecipeParser = require('../recipeParser.js')
 const timeParse = require('parse-duration')
 
 class RicardoParser extends RecipeParser {
-    constructor() {
-        super()
-    }
 
     getRecipeInfo(selector) {
         const recipeInfo = this.getTxtArrayFromElements(selector)
@@ -61,6 +58,7 @@ class RicardoParser extends RecipeParser {
 
     parse() {
         return {
+            websiteName: this.getWebsiteName(),
             recipeUrl: this.recipeUrl,
             title: this.getTitle('.recipe-content > h1'),
             recipeInfo: this.getRecipeInfo('.recipe-content > dl > dd'),
